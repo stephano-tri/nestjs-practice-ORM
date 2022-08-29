@@ -10,7 +10,7 @@ import {ProductController} from "./product.controller";
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: `postgresql://root:${DB-PASSWORD}@localhost:5432/study?options=-c%20search_path=online_store`,
+      url: `postgresql://root:${DB_PASSWORD}@localhost:5432/study?options=-c%20search_path=online_store`,
       database: 'study',
       synchronize: true,
       logging: true,
@@ -18,7 +18,7 @@ import {ProductController} from "./product.controller";
   }),
     TypeOrmModule.forFeature([Product]),
   ],
-  controllers: [ProductController],
-  providers: [ProductService],
+  controllers: [ProductController, AppController],
+  providers: [ProductService, AppService],
 })
 export class AppModule {}

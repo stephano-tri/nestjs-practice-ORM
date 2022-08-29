@@ -1,7 +1,7 @@
 import {Injectable} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Product} from './product.entity';
-import {Repository} from "typeorm";
+import {DeleteResult, Repository} from "typeorm";
 
 @Injectable()
 export class ProductService {
@@ -16,5 +16,13 @@ export class ProductService {
 
   findOne(id: number): Promise<Product> {
     return this.productRepository.findOneBy({ id });
+  }
+
+  createOrUpdate(product: Product): Promise<Product> {
+    return this.productRepository.save(product);
+  }
+
+  delete(id: number): Promise<DeleteResult> {
+    return this.productRepository.delete(id);
   }
 }
