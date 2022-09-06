@@ -5,17 +5,29 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import {Product} from 'src/models/product.entity';
 import {ProductService} from "./models/product.service";
 import {ProductController} from "./product.controller";
+import {ConfigModule, ConfigService} from "@nestjs/config";
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      url: `postgresql://root:${DB_PASSWORD}@localhost:5432/study?options=-c%20search_path=online_store`,
-      database: 'study',
-      synchronize: true,
-      logging: true,
-      entities: [Product],
-  }),
+    ConfigModule.forRoot({
+      envFilePath: '.database.env',
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: 'localhost',
+        port: 5432,
+        username: configService.get('DATABASE_ID'),
+        password: configService.get('DATABASE_PASSWORD'),
+        database: 'study',
+        synchronize: true,
+        logging: true,
+        schema: 'online_store',
+        entities: [Product],
+      }),
+    }),
     TypeOrmModule.forFeature([Product]),
   ],
   controllers: [ProductController, AppController],
